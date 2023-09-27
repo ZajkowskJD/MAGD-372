@@ -11,17 +11,23 @@ public class WizardController : MonoBehaviour
     [SerializeField] private float reactionTime = 0.2f;
 
     private NavMeshAgent agent;
+    private float distance = 0;
 
     void Awake() {
         agent = GetComponent<NavMeshAgent>();
         _Wander();
     }
 
+    private void FixedUpdate()
+    {
+        distance = Vector3.Distance(agent.destination, transform.position);
+    }
+
     private async void _Wander() {
         Debug.Log("start");
         agent.destination = waypoints[Random.Range(0, waypoints.Length)].position;
         while (true) {
-            while (Vector3.Distance(agent.destination, transform.position) > proximityBuffer)
+            while (distance > proximityBuffer)
             {
                 await Task.Yield();
             }
